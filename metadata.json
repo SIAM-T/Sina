@@ -1,0 +1,6 @@
+{
+  "name": "Hisab Khata",
+  "description": "Digital MFS, Mobile Recharge & Shop Balance Ledger (হিসাব খাতা) with multi-account per phone number support, configurable transaction rules, customer due ledger, audit history, and offline-first Firebase sync.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

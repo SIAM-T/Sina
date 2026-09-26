@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Hisab Khata</string>
+    <string name="shop_subtitle">ডিজিটাল হিসাব খাতা ও MFS ব্যালেন্স ম্যানেজার</string>
+    <string name="cash_in_hand">ক্যাশ ইন হ্যান্ড (CASH IN HAND)</string>
+    <string name="mfs_digital_balances">MFS ও রিচার্জ অ্যাকাউন্ট (DIGITAL BALANCES)</string>
+    <string name="customer_due">বাকি / বকেয়া (CUSTOMER DUE)</string>
+    <string name="new_transaction">+ নতুন লেনদেন (NEW TRANSACTION)</string>
+    <string name="collect_due">বকেয়া আদায় (COLLECT DUE)</string>
+    <string name="reconcile_balance">ব্যালেন্স মিলকরণ (RECONCILE)</string>
+    <string name="transfer_money">অ্যাকাউন্ট ট্রান্সফার (TRANSFER)</string>
+    <string name="nav_home">হোম (Home)</string>
+    <string name="nav_transaction">লেনদেন (Entry)</string>
+    <string name="nav_due">বাকি (Due)</string>
+    <string name="nav_history">ইতিহাস (History)</string>
+    <string name="nav_more">আরও (More)</string>
+</resources>
