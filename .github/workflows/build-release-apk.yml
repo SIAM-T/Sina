@@ -11,23 +11,34 @@ on:
 permissions:
   contents: write
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   build-release-apk:
     name: Assemble Signed Release APK
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up JDK 21
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
           java-version: '21'
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
+      - name: Configure Android SDK
+        run: |
+          SDK_DIR="${ANDROID_HOME:-/usr/local/lib/android/sdk}"
+          echo "ANDROID_HOME=${SDK_DIR}" >> "$GITHUB_ENV"
+          echo "ANDROID_SDK_ROOT=${SDK_DIR}" >> "$GITHUB_ENV"
+          echo "${SDK_DIR}/cmdline-tools/latest/bin" >> "$GITHUB_PATH"
+          echo "${SDK_DIR}/platform-tools" >> "$GITHUB_PATH"
+          if [ -x "${SDK_DIR}/cmdline-tools/latest/bin/sdkmanager" ]; then
+            yes | "${SDK_DIR}/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null || true
+          fi
 
       - name: Set up Gradle 9.3.1
         uses: gradle/actions/setup-gradle@v4
@@ -90,12 +101,13 @@ jobs:
           if-no-files-found: error
           retention-days: 90
 
-      - name: Publish APK to GitHub Releases (on main/master push)
-        if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/'))
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: v1.0.${{ github.run_number }}
-          name: "Hisab Khata Release v1.0.${{ github.run_number }}"
-          body: "Automated signed release APK build for Hisab Khata (ডিজিটাল হিসাব খাতা ও MFS ব্যালেন্স ম্যানেজার)."
-          files: app/build/outputs/apk/release/Hisab-Khata-release.apk
-          prerelease: false
+      - name: Publish APK to GitHub Releases (on push)
+        if: github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG_NAME="v1.0.${{ github.run_number }}"
+          gh release create "$TAG_NAME" \
+            app/build/outputs/apk/release/Hisab-Khata-release.apk \
+            --title "Hisab Khata Release $TAG_NAME" \
+            --notes "Automated signed release APK build for Hisab Khata (ডিজিটাল হিসাব খাতা ও MFS ব্যালেন্স ম্যানেজার)." || true
